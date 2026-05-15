@@ -324,7 +324,7 @@
         localStorage.setItem('sfx_collapsed_folders', JSON.stringify([...preservedCollapsed]));
     }
 
-    // --- Modal Detection Logic ---
+    // --- Modal Detection Logic (Updated for Commas) ---
     function autoDetectTags() {
         if (files.length === 0) {
             alert("Please open an audio folder first.");
@@ -336,21 +336,18 @@
         files.forEach(f => {
             let name = f.name;
             if (name.includes(',')) {
-                let prefixBlock = name.split('_')[0];
-                if (!name.includes('_') && prefixBlock.includes('.')) {
-                    prefixBlock = prefixBlock.substring(0, prefixBlock.lastIndexOf('.'));
-                }
-                prefixBlock.split(',').forEach(t => {
-                    let clean = t.trim();
+                // Split by comma. The last element contains the base filename + extension, so we ignore it.
+                let parts = name.split(',');
+                for (let i = 0; i < parts.length - 1; i++) {
+                    let clean = parts[i].trim();
                     if (clean && !tags.includes(clean)) {
                         newTags.add(clean);
                     }
-                });
+                }
             }
         });
 
         if (newTags.size > 0) {
-            // Sort them before displaying in the modal
             const arr = Array.from(newTags).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
             const grid = document.getElementById('detected-tags-list');
             grid.innerHTML = '';
@@ -385,7 +382,7 @@
         
         if (tagsToAdd.length > 0) {
             tags.push(...tagsToAdd);
-            saveTags(); // This will auto-sort them
+            saveTags(); 
             renderList(); 
         }
         closeDetectionModal();
@@ -393,9 +390,7 @@
 
     // --- Tag Logic ---
     function saveTags() {
-        // ALWAYS SORT TAGS ALPHABETICALLY BEFORE SAVING
         tags.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-        
         localStorage.setItem('sfx_tags', JSON.stringify(tags));
         renderTagManager();
         renderWorkspaceTags();
@@ -415,7 +410,7 @@
                 const imported = JSON.parse(e.target.result); 
                 if (Array.isArray(imported)) { 
                     tags = imported; 
-                    saveTags(); // This will sort the newly imported tags
+                    saveTags(); 
                     renderList(); 
                 } 
             } catch (err) { alert("Error parsing JSON"); } 
@@ -486,7 +481,7 @@
         return { activeTags, baseName };
     }
 
-    // --- Dynamic Workspace Tags ---
+    // --- Dynamic Workspace Tags (Updated for Commas) ---
     function renderWorkspaceTags() {
         const grid = document.getElementById('tag-buttons-workspace');
         grid.innerHTML = '';
@@ -512,14 +507,17 @@
                     const tagIndex = newActiveTags.indexOf(tag);
                     if(tagIndex > -1) newActiveTags.splice(tagIndex, 1);
                     
-                    const newPrefix = newActiveTags.length > 0 ? newActiveTags.join('_') + '_' : '';
+                    // Rewrite with strictly comma + space
+                    const newPrefix = newActiveTags.length > 0 ? newActiveTags.join(', ') + ', ' : '';
                     const newName = newPrefix + baseName;
                     executeRename(currentIndex, newName);
                 };
             } else {
                 b.innerText = tag;
                 b.onclick = () => {
-                    const newPrefix = activeTags.length > 0 ? tag + '_' + activeTags.join('_') + '_' : tag + '_';
+                    // Append new tag using comma + space
+                    const allTags = [...activeTags, tag];
+                    const newPrefix = allTags.join(', ') + ', ';
                     const newName = newPrefix + baseName;
                     executeRename(currentIndex, newName);
                 };
