@@ -32,25 +32,32 @@
         .icon-lg { width: 24px; height: 24px; min-width: 24px; min-height: 24px; max-width: 24px; max-height: 24px; }
         .fill-icon { fill: currentColor; stroke: none; }
 
-        /* --- Left Sidebar: Tag Manager --- */
-        #left-sidebar { width: 280px; background: var(--panel-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; transition: width 0.3s ease, min-width 0.3s ease; overflow: hidden; white-space: nowrap; }
-        #left-sidebar.collapsed { width: 0; min-width: 0; border-right: none; }
+        /* --- Panel Layout Ordering --- */
+        #file-sidebar { order: 1; min-width: 250px; width: 400px; max-width: 700px; background: var(--panel-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: relative; }
+        #main { order: 2; flex: 1; display: flex; flex-direction: column; position: relative; }
+        #tag-sidebar { order: 3; width: 280px; background: var(--panel-bg); border-left: 1px solid var(--border); display: flex; flex-direction: column; transition: width 0.3s ease, min-width 0.3s ease; overflow: hidden; white-space: nowrap; }
+
+        /* --- Tag Sidebar Specifics --- */
+        #tag-sidebar.collapsed { width: 0; min-width: 0; border-left: none; }
         .panel-header { padding: 15px; font-weight: bold; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         #tag-manager-list { flex: 1; overflow-y: auto; padding: 15px; list-style: none; margin: 0; }
         .tag-edit-item { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
         .tag-edit-item input { flex: 1; min-width: 0; }
         .panel-footer { padding: 15px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
         
-        /* --- Center Workspace --- */
-        #main { flex: 1; display: flex; flex-direction: column; position: relative; }
+        /* --- Workspace Specifics --- */
         #top-bar { padding: 15px; display: flex; border-bottom: 1px solid var(--border); align-items: center; gap: 10px;}
         #workspace-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; overflow-y: auto; }
 
-        /* --- Right Sidebar: File Explorer (Tree View) --- */
-        #right-sidebar { min-width: 250px; width: 400px; max-width: 700px; background: var(--panel-bg); border-left: 1px solid var(--border); display: flex; flex-direction: column; position: relative; }
-        #resizer { width: 4px; cursor: col-resize; background: transparent; position: absolute; left: -2px; top: 0; bottom: 0; z-index: 10; }
+        /* --- File Explorer Specifics --- */
+        #resizer { width: 4px; cursor: col-resize; background: transparent; position: absolute; right: -2px; top: 0; bottom: 0; z-index: 10; }
         #resizer:hover { background: var(--accent); }
         
+        /* Custom Search Box */
+        .search-box { display: flex; align-items: center; background: var(--input-bg); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; transition: 0.2s; }
+        .search-box:focus-within { border-color: var(--accent); }
+        .search-box input { border: none !important; background: transparent; width: 100%; color: white; outline: none; padding-left: 8px; font-size: 13px; }
+
         #file-list-container { flex: 1; overflow-y: auto; padding: 10px 0; }
         .tree-list { list-style: none; padding-left: 15px; margin: 0; }
         #file-list-container > .tree-list { padding-left: 0; } 
@@ -63,13 +70,14 @@
         .folder-contents { overflow: hidden; }
         .folder-item.collapsed .folder-contents { display: none; }
         
-        .file-item { padding: 8px 15px 8px 25px; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .file-item { padding: 8px 15px 8px 25px; border-bottom: 1px solid #222; display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
         .file-item:hover { background: #1a1a1a; }
         .file-item.active { background: #1e1e1e; border-left: 3px solid var(--accent); padding-left: 22px; }
+        .file-item .btn-icon { margin-top: -2px; } 
         
-        .file-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+        .file-name { flex: 1; font-size: 13px; display: flex; align-items: flex-start; flex-wrap: wrap; gap: 8px; word-break: break-word; white-space: normal; line-height: 1.4; }
         .file-item input.rename-input { flex: 1; }
-        .file-item.renamed .file-name::before { content: ''; display: inline-block; width: 6px; height: 6px; min-width: 6px; background: var(--success); border-radius: 50%; flex-shrink: 0; }
+        .file-item.renamed .file-name::before { content: ''; display: inline-block; width: 6px; height: 6px; min-width: 6px; background: var(--success); border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
 
         /* --- Custom Player --- */
         #custom-player { width: 100%; max-width: 600px; background: #1a1a1a; padding: 20px; border-radius: 12px; margin-bottom: 30px; }
@@ -123,7 +131,66 @@
         </div>
     </div>
 
-    <div id="left-sidebar" class="collapsed">
+    <div id="file-sidebar">
+        <div id="resizer"></div>
+        <div class="panel-header" style="flex-direction: column; align-items: stretch; gap: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span>File Explorer</span>
+                <button class="btn-icon" id="toggle-folders-btn" onclick="toggleAllFolders()" title="Toggle Folders">
+                    <svg class="icon" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                </button>
+            </div>
+            <div class="search-box">
+                <svg class="icon icon-sm" style="color: var(--icon-color);" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="file-search-input" placeholder="Search files..." oninput="handleSearch()">
+            </div>
+        </div>
+        <div id="file-list-container"></div>
+    </div>
+
+    <div id="main">
+        <div id="top-bar">
+            <button id="close-folder-btn" class="btn btn-danger" onclick="closeFolder()" title="Close current folder to open a new one" style="display: none;">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                Close Folder
+            </button>
+            <button id="init-btn" class="btn btn-accent" style="display: none;">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                Open Audio Folder
+            </button>
+            <div style="flex:1"></div>
+            <button class="btn" onclick="toggleTagsSidebar()">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                Manage Tags
+            </button>
+        </div>
+        
+        <div id="workspace-content" style="display:none;">
+            <div id="custom-player">
+                <div id="current-title" style="text-align:center; margin-bottom:15px; font-weight:600; word-break: break-word; line-height: 1.4;">Select a sound</div>
+                <div id="progress-container"><div id="progress-bar"></div></div>
+                <div class="time-info"><span id="time-current">0:00</span><span id="time-total">0:00</span></div>
+                <div class="player-controls">
+                    <button class="btn-icon" onclick="prevTrack()" title="Previous (Up/Left Arrow)"><svg class="icon icon-lg fill-icon" viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor"></line></svg></button>
+                    <button class="btn-icon" id="play-pause-btn" onclick="togglePlay()" style="color: white;" title="Play/Pause (Space)"><svg class="icon icon-lg fill-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
+                    <button class="btn-icon" onclick="nextTrack()" title="Next (Down/Right Arrow)"><svg class="icon icon-lg fill-icon" viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor"></line></svg></button>
+                </div>
+            </div>
+
+            <div class="tag-grid" id="tag-buttons-workspace"></div>
+            
+            <div style="margin-top: 30px; display: flex; gap: 10px; justify-content: center;">
+                <button class="btn" onclick="undo()" style="color:var(--danger)" title="Undo (Cmd/Ctrl + Z)">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg> Undo Rename
+                </button>
+                <button class="btn" id="redo-btn" onclick="redo()" style="color:var(--success)" title="Redo (Cmd/Ctrl + Shift + Z)">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg> Redo Rename
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="tag-sidebar" class="collapsed">
         <div class="panel-header">
             <span>Tag Manager</span>
             <button class="btn-icon" onclick="toggleTagsSidebar()">
@@ -139,7 +206,7 @@
         </div>
         <ul id="tag-manager-list"></ul>
         <div class="panel-footer">
-            <button class="btn" onclick="autoDetectTags()" title="Scans current folder for comma-separated tags">
+            <button class="btn" onclick="autoDetectTags()" title="Scans folder for delimited tags">
                 <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 Detect Tags from Files
             </button>
@@ -153,59 +220,6 @@
             </button>
             <input type="file" id="import-file" style="display:none" accept=".json" onchange="importTags(event)">
         </div>
-    </div>
-
-    <div id="main">
-        <div id="top-bar">
-            <button class="btn" onclick="toggleTagsSidebar()">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-                Manage Tags
-            </button>
-            <button class="btn btn-danger" onclick="closeFolder()" title="Close current folder to open a new one">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                Close Folder
-            </button>
-            <div style="flex:1"></div>
-            <button id="init-btn" class="btn btn-accent">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                Open Audio Folder
-            </button>
-        </div>
-        
-        <div id="workspace-content" style="display:none;">
-            <div id="custom-player">
-                <div id="current-title" style="text-align:center; margin-bottom:15px; font-weight:600;">Select a sound</div>
-                <div id="progress-container"><div id="progress-bar"></div></div>
-                <div class="time-info"><span id="time-current">0:00</span><span id="time-total">0:00</span></div>
-                <div class="player-controls">
-                    <button class="btn-icon" onclick="prevTrack()"><svg class="icon icon-lg fill-icon" viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor"></line></svg></button>
-                    <button class="btn-icon" id="play-pause-btn" onclick="togglePlay()" style="color: white;"><svg class="icon icon-lg fill-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
-                    <button class="btn-icon" onclick="nextTrack()"><svg class="icon icon-lg fill-icon" viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor"></line></svg></button>
-                </div>
-            </div>
-
-            <div class="tag-grid" id="tag-buttons-workspace"></div>
-            
-            <div style="margin-top: 30px; display: flex; gap: 10px; justify-content: center;">
-                <button class="btn" onclick="undo()" style="color:var(--danger)">
-                    <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg> Undo Rename
-                </button>
-                <button class="btn" id="redo-btn" onclick="redo()" style="color:var(--success)">
-                    <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg> Redo Rename
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="right-sidebar">
-        <div id="resizer"></div>
-        <div class="panel-header">
-            <span>File Explorer</span>
-            <button class="btn-icon" id="toggle-folders-btn" onclick="toggleAllFolders()" title="Toggle Folders">
-                <svg class="icon" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>
-            </button>
-        </div>
-        <div id="file-list-container"></div>
     </div>
 
     <audio id="audio-engine"></audio>
@@ -270,47 +284,107 @@
     const DEFAULT_TAGS = ['Comedy', 'Tabla', 'Impact', 'Transition', 'Foley', 'Cinematic'];
     let tags = JSON.parse(localStorage.getItem('sfx_tags')) || DEFAULT_TAGS;
     let preservedCollapsed = new Set(JSON.parse(localStorage.getItem('sfx_collapsed_folders')) || []);
+    let savedSearchQuery = localStorage.getItem('sfx_search_query') || '';
+    let savedSidebarWidth = localStorage.getItem('sfx_sidebar_width') || '400';
     
-    let dirHandle, files = [], currentIndex = -1;
+    let dirHandle;
+    let allFiles = []; 
+    let files = []; 
+    let searchResults = null; 
+    let currentIndex = -1;
     let historyStack = [], redoStack = [];
+    
     const audioEngine = document.getElementById('audio-engine');
     const progressBar = document.getElementById('progress-bar');
     const playPauseBtn = document.getElementById('play-pause-btn');
 
-    // --- Boot Sequence ---
+    // --- Global Keyboard Shortcuts ---
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+        else if (e.code === 'ArrowDown' || e.code === 'ArrowRight') { e.preventDefault(); nextTrack(); }
+        else if (e.code === 'ArrowUp' || e.code === 'ArrowLeft') { e.preventDefault(); prevTrack(); }
+        else if (e.code === 'KeyZ' && (e.metaKey || e.ctrlKey) && !e.shiftKey) { e.preventDefault(); undo(); }
+        else if ((e.code === 'KeyZ' && (e.metaKey || e.ctrlKey) && e.shiftKey) || (e.code === 'KeyY' && (e.metaKey || e.ctrlKey))) { e.preventDefault(); redo(); }
+    });
+
+    // --- Boot Sequence (Silent Auto-Resume) ---
     window.onload = async () => {
         saveTags(); 
         
+        // Restore Layout Memory
+        const fileSidebar = document.getElementById('file-sidebar');
+        fileSidebar.style.width = savedSidebarWidth + 'px';
+
+        const searchInput = document.getElementById('file-search-input');
+        if (searchInput) searchInput.value = savedSearchQuery;
+
         const savedHandle = await loadDirectoryHandle();
         const initBtn = document.getElementById('init-btn');
+        const closeBtn = document.getElementById('close-folder-btn');
         
         if (savedHandle) {
-            initBtn.innerHTML = `${SVGs.resume} Resume Workspace`;
-            initBtn.onclick = async () => {
-                try {
-                    if (await verifyPermission(savedHandle)) {
-                        dirHandle = savedHandle;
-                        initBtn.innerHTML = `Scanning...`; 
-                        await scanDirectory(dirHandle);
-                        initBtn.style.display = 'none';
-                        document.getElementById('workspace-content').style.display = 'flex';
-                        renderList();
-                    }
-                } catch(e) { console.error("Could not verify handle", e); }
-            };
+            // Check if permission is ALREADY granted (usually true on refresh)
+            const permStatus = await savedHandle.queryPermission({ mode: 'readwrite' });
+            
+            if (permStatus === 'granted') {
+                // AUTOMATIC SILENT RESUME
+                dirHandle = savedHandle;
+                
+                // Show Correct Buttons
+                closeBtn.style.display = 'flex';
+                
+                // Show scanning state
+                document.getElementById('workspace-content').style.display = 'flex';
+                document.getElementById('file-list-container').innerHTML = '<div style="padding:20px; color:#888;">Auto-resuming workspace...</div>';
+                
+                allFiles = [];
+                searchResults = null;
+                await scanDirectory(dirHandle);
+                renderList(!!savedSearchQuery);
+            } else {
+                // If it requires a prompt (e.g. Chrome restarted), show the resume button
+                initBtn.style.display = 'flex';
+                initBtn.innerHTML = `${SVGs.resume} Resume Workspace`;
+                initBtn.onclick = async () => {
+                    try {
+                        if (await verifyPermission(savedHandle)) {
+                            dirHandle = savedHandle;
+                            initBtn.innerHTML = `Scanning...`; 
+                            allFiles = [];
+                            searchResults = null;
+
+                            await scanDirectory(dirHandle);
+                            
+                            initBtn.style.display = 'none';
+                            closeBtn.style.display = 'flex';
+                            
+                            document.getElementById('workspace-content').style.display = 'flex';
+                            renderList(!!savedSearchQuery); 
+                        }
+                    } catch(e) { console.error("Could not verify handle", e); }
+                };
+            }
         } else {
+            // First time setup
+            initBtn.style.display = 'flex';
             initBtn.onclick = async () => {
                 try {
                     dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
                     await saveDirectoryHandle(dirHandle);
                     
-                    files = [];
+                    allFiles = [];
+                    searchResults = null;
+
                     initBtn.innerHTML = `Scanning...`; 
                     await scanDirectory(dirHandle);
                     
                     initBtn.style.display = 'none';
+                    closeBtn.style.display = 'flex';
+                    
                     document.getElementById('workspace-content').style.display = 'flex';
-                    renderList();
+                    renderList(!!savedSearchQuery); 
                 } catch(e) { console.log("User aborted"); }
             };
         }
@@ -324,24 +398,21 @@
         localStorage.setItem('sfx_collapsed_folders', JSON.stringify([...preservedCollapsed]));
     }
 
-    // --- Modal Detection Logic (Updated for Commas) ---
+    // --- Modal Detection Logic ---
     function autoDetectTags() {
-        if (files.length === 0) {
-            alert("Please open an audio folder first.");
-            return;
-        }
+        if (allFiles.length === 0) { alert("Please open an audio folder first."); return; }
 
         let newTags = new Set();
-        
-        files.forEach(f => {
+        allFiles.forEach(f => {
             let name = f.name;
-            if (name.includes(',')) {
-                // Split by comma. The last element contains the base filename + extension, so we ignore it.
-                let parts = name.split(',');
-                for (let i = 0; i < parts.length - 1; i++) {
-                    let clean = parts[i].trim();
-                    if (clean && !tags.includes(clean)) {
-                        newTags.add(clean);
+            let nameWithoutExt = name.includes('.') ? name.substring(0, name.lastIndexOf('.')) : name;
+            
+            if (nameWithoutExt.match(/[,_]/)) {
+                let parts = nameWithoutExt.split(/[,_]+/);
+                if (parts.length > 1) {
+                    for (let i = 0; i < parts.length - 1; i++) {
+                        let clean = parts[i].trim();
+                        if (clean && !tags.includes(clean)) newTags.add(clean);
                     }
                 }
             }
@@ -353,38 +424,19 @@
             grid.innerHTML = '';
             
             arr.forEach((tag) => {
-                const lbl = document.createElement('label');
-                lbl.className = 'detected-tag-label';
-                
-                const cb = document.createElement('input');
-                cb.type = 'checkbox';
-                cb.value = tag;
-                cb.checked = true;
-                
-                lbl.appendChild(cb);
-                lbl.appendChild(document.createTextNode(tag));
-                grid.appendChild(lbl);
+                const lbl = document.createElement('label'); lbl.className = 'detected-tag-label';
+                const cb = document.createElement('input'); cb.type = 'checkbox'; cb.value = tag; cb.checked = true;
+                lbl.appendChild(cb); lbl.appendChild(document.createTextNode(tag)); grid.appendChild(lbl);
             });
-            
             document.getElementById('detection-modal').style.display = 'flex';
-        } else {
-            alert("No unknown comma-separated tags found.");
-        }
+        } else { alert("No unknown tags found."); }
     }
 
-    function closeDetectionModal() {
-        document.getElementById('detection-modal').style.display = 'none';
-    }
-
+    function closeDetectionModal() { document.getElementById('detection-modal').style.display = 'none'; }
     function importDetectedTags() {
         const checkboxes = document.querySelectorAll('#detected-tags-list input[type="checkbox"]:checked');
         const tagsToAdd = Array.from(checkboxes).map(cb => cb.value);
-        
-        if (tagsToAdd.length > 0) {
-            tags.push(...tagsToAdd);
-            saveTags(); 
-            renderList(); 
-        }
+        if (tagsToAdd.length > 0) { tags.push(...tagsToAdd); saveTags(); renderList(); }
         closeDetectionModal();
     }
 
@@ -400,23 +452,11 @@
     function removeTag(index) { tags.splice(index, 1); saveTags(); }
     function updateTag(index, newVal) { if(newVal.trim()) { tags[index] = newVal.trim(); saveTags(); } }
     function exportTags() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tags)); const anchor = document.createElement('a'); anchor.href = dataStr; anchor.download = "sfx_tags_preset.json"; anchor.click(); }
-    
     function importTags(event) { 
-        const file = event.target.files[0]; 
-        if (!file) return; 
+        const file = event.target.files[0]; if (!file) return; 
         const reader = new FileReader(); 
-        reader.onload = (e) => { 
-            try { 
-                const imported = JSON.parse(e.target.result); 
-                if (Array.isArray(imported)) { 
-                    tags = imported; 
-                    saveTags(); 
-                    renderList(); 
-                } 
-            } catch (err) { alert("Error parsing JSON"); } 
-        }; 
-        reader.readAsText(file); 
-        event.target.value = ''; 
+        reader.onload = (e) => { try { const imported = JSON.parse(e.target.result); if (Array.isArray(imported)) { tags = imported; saveTags(); renderList(); } } catch (err) { alert("Error parsing JSON"); } }; 
+        reader.readAsText(file); event.target.value = ''; 
     }
 
     function renderTagManager() {
@@ -430,14 +470,22 @@
         });
     }
 
-    function toggleTagsSidebar() { document.getElementById('left-sidebar').classList.toggle('collapsed'); }
+    function toggleTagsSidebar() { document.getElementById('tag-sidebar').classList.toggle('collapsed'); }
 
-    // --- UI Utilities ---
-    const rightSidebar = document.getElementById('right-sidebar');
+    // --- Resizer Memory Logic ---
+    const fileSidebar = document.getElementById('file-sidebar');
     const resizer = document.getElementById('resizer');
     resizer.addEventListener('mousedown', () => { document.addEventListener('mousemove', resize); document.addEventListener('mouseup', stopResize); });
-    function resize(e) { let newWidth = window.innerWidth - e.pageX; if (newWidth > 250 && newWidth < 700) rightSidebar.style.width = newWidth + 'px'; }
-    function stopResize() { document.removeEventListener('mousemove', resize); }
+    
+    function resize(e) { 
+        let newWidth = e.pageX; 
+        if (newWidth > 250 && newWidth < 700) fileSidebar.style.width = newWidth + 'px'; 
+    }
+    
+    function stopResize() { 
+        document.removeEventListener('mousemove', resize); 
+        localStorage.setItem('sfx_sidebar_width', fileSidebar.offsetWidth);
+    }
 
     let isFoldersExpanded = true;
     function toggleAllFolders() {
@@ -452,10 +500,17 @@
         saveCollapsedState();
     }
 
+    // --- Search Input Memory Logic ---
+    function handleSearch() {
+        const val = document.getElementById('file-search-input').value;
+        localStorage.setItem('sfx_search_query', val);
+        renderList(true);
+    }
+
     // --- SMART Filename Extraction Engine ---
     function extractTagsFromName(filename, knownTags) {
         let activeTags = [];
-        let baseName = filename;
+        let baseName = filename.trim();
         let parsing = true;
 
         const sortedTags = [...knownTags].sort((a, b) => b.length - a.length);
@@ -465,15 +520,14 @@
             for (let tag of sortedTags) {
                 if (baseName.startsWith(tag)) {
                     const afterTag = baseName.substring(tag.length);
-                    if (afterTag.startsWith('_') || afterTag.startsWith(',') || afterTag.startsWith(' ') || afterTag.startsWith('.')) {
+                    if (afterTag === '' || afterTag.startsWith('_') || afterTag.startsWith(',') || afterTag.startsWith('.')) {
                         activeTags.push(tag);
                         baseName = afterTag;
                         
                         while(baseName.startsWith('_') || baseName.startsWith(',') || baseName.startsWith(' ')) {
                             baseName = baseName.substring(1);
                         }
-                        parsing = true; 
-                        break; 
+                        parsing = true; break; 
                     }
                 }
             }
@@ -481,7 +535,7 @@
         return { activeTags, baseName };
     }
 
-    // --- Dynamic Workspace Tags (Updated for Commas) ---
+    // --- Dynamic Workspace Tags ---
     function renderWorkspaceTags() {
         const grid = document.getElementById('tag-buttons-workspace');
         grid.innerHTML = '';
@@ -507,7 +561,6 @@
                     const tagIndex = newActiveTags.indexOf(tag);
                     if(tagIndex > -1) newActiveTags.splice(tagIndex, 1);
                     
-                    // Rewrite with strictly comma + space
                     const newPrefix = newActiveTags.length > 0 ? newActiveTags.join(', ') + ', ' : '';
                     const newName = newPrefix + baseName;
                     executeRename(currentIndex, newName);
@@ -515,7 +568,6 @@
             } else {
                 b.innerText = tag;
                 b.onclick = () => {
-                    // Append new tag using comma + space
                     const allTags = [...activeTags, tag];
                     const newPrefix = allTags.join(', ') + ', ';
                     const newName = newPrefix + baseName;
@@ -530,7 +582,7 @@
     async function scanDirectory(directoryHandle, currentPath = '') {
         for await (const entry of directoryHandle.values()) {
             if (entry.kind === 'file' && /\.(wav|mp3|m4a|ogg)$/i.test(entry.name)) {
-                files.push({ handle: entry, name: entry.name, originalName: entry.name, path: currentPath });
+                allFiles.push({ handle: entry, name: entry.name, originalName: entry.name, path: currentPath });
             } else if (entry.kind === 'directory') {
                 if (!entry.name.startsWith('.')) {
                     const newPath = currentPath ? `${currentPath}/${entry.name}` : entry.name;
@@ -540,15 +592,37 @@
         }
     }
 
-    function renderList() {
+    // `isSearchEvent` determines if we should re-filter the master list.
+    function renderList(isSearchEvent = false) {
+        const searchInput = document.getElementById('file-search-input');
+        const searchQuery = searchInput ? searchInput.value.toLowerCase() : '';
         const container = document.getElementById('file-list-container');
         saveCollapsedState(); 
 
         const activeFile = currentIndex > -1 ? files[currentIndex] : null;
         container.innerHTML = '';
         
+        // STICKY SEARCH LOGIC
+        if (isSearchEvent) {
+            if (searchQuery) {
+                searchResults = allFiles.filter(f => f.name.toLowerCase().includes(searchQuery));
+            } else {
+                searchResults = null;
+            }
+        }
+
+        let workingFiles = searchResults || allFiles;
+
+        if (workingFiles.length === 0) {
+            container.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--icon-color); font-size: 13px;">No files found.</div>';
+            files = [];
+            currentIndex = -1;
+            renderWorkspaceTags();
+            return;
+        }
+
         const treeData = {};
-        files.forEach((file) => {
+        workingFiles.forEach((file) => {
             const parts = file.path ? file.path.split('/') : [];
             let currentLevel = treeData;
             parts.forEach(part => {
@@ -575,7 +649,7 @@
                 
                 if (item._isDir) {
                     const folderPath = pathPrefix ? `${pathPrefix}/${key}` : key;
-                    const shouldCollapse = preservedCollapsed.has(folderPath);
+                    const shouldCollapse = (searchResults && searchQuery) ? false : preservedCollapsed.has(folderPath);
                     
                     li.className = `folder-item ${shouldCollapse ? 'collapsed' : ''}`;
                     li.dataset.path = folderPath; 
@@ -635,7 +709,11 @@
         buildHTMLTree(treeData, container, '');
 
         files = newSortedFiles;
-        if (activeFile) currentIndex = files.findIndex(f => f === activeFile);
+        if (activeFile) {
+            currentIndex = files.findIndex(f => f === activeFile);
+        } else {
+            currentIndex = -1;
+        }
         
         renderWorkspaceTags(); 
     }
@@ -705,7 +783,7 @@
     async function applyTag(tag) {
         if (currentIndex === -1) return;
         const f = files[currentIndex];
-        await executeRename(currentIndex, `${tag}_${f.name}`);
+        await executeRename(currentIndex, `${tag}, ${f.name}`);
     }
 
     async function executeRename(index, newName) {
@@ -720,6 +798,8 @@
             f.name = newName;
             
             if (currentIndex === index) document.getElementById('current-title').innerText = newName;
+            
+            // Notice: isSearchEvent is implicitly false here! The results stay sticky.
             renderList(); 
         } catch (e) { alert("Error renaming. Ensure the file isn't open in another app."); renderList(); }
     }
