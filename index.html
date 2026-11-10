@@ -14,6 +14,10 @@
             --danger: #ff453a;
             --success: #32d74b;
             --icon-color: #888;
+            --pill-py: 10px;
+            --pill-px: 18px;
+            --pill-fs: 13px;
+            --pill-gap: 10px;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -27,24 +31,20 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- Sleek Custom Scrollbars --- */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; border: 2px solid var(--panel-bg); }
         ::-webkit-scrollbar-thumb:hover { background: #555; }
 
-        /* --- Global SVG Icon Styles --- */
         .icon { width: 16px; height: 16px; min-width: 16px; min-height: 16px; max-width: 16px; max-height: 16px; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; display: inline-block; }
         .icon-sm { width: 14px; height: 14px; min-width: 14px; min-height: 14px; max-width: 14px; max-height: 14px; }
         .icon-lg { width: 24px; height: 24px; min-width: 24px; min-height: 24px; max-width: 24px; max-height: 24px; }
         .fill-icon { fill: currentColor; stroke: none; }
 
-        /* --- Panel Layout Ordering --- */
         #file-sidebar { order: 1; min-width: 250px; width: 400px; max-width: 700px; background: var(--panel-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: relative; z-index: 10; box-shadow: 2px 0 20px rgba(0,0,0,0.3); }
         #main { order: 2; flex: 1; min-width: 0; height: 100vh; display: flex; flex-direction: column; position: relative; background: radial-gradient(circle at center top, #141414 0%, var(--bg) 100%); overflow: hidden; }
         #tag-sidebar { order: 3; width: 280px; background: var(--panel-bg); border-left: 1px solid var(--border); display: flex; flex-direction: column; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; white-space: nowrap; box-shadow: -2px 0 20px rgba(0,0,0,0.3); }
 
-        /* --- Tag Sidebar Specifics --- */
         #tag-sidebar.collapsed { width: 0; min-width: 0; border-left: none; }
         .panel-header { padding: 18px 20px; font-weight: 600; font-size: 14px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; letter-spacing: 0.3px; }
         #tag-manager-list { flex: 1; overflow-y: auto; padding: 20px; list-style: none; margin: 0; }
@@ -52,20 +52,16 @@
         .tag-edit-item input { flex: 1; min-width: 0; }
         .panel-footer { padding: 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px; background: rgba(0,0,0,0.2); }
         
-        /* --- Workspace Specifics --- */
         #top-bar { flex-shrink: 0; padding: 15px 25px; display: flex; border-bottom: 1px solid var(--border); align-items: center; gap: 12px; background: rgba(17, 17, 17, 0.8); backdrop-filter: blur(10px); z-index: 5; }
-        #workspace-content { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 28px 40px 24px 40px; overflow: hidden; box-sizing: border-box; }
+        #workspace-content { flex: 1; min-height: 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: clamp(16px, 2.5vh, 32px) clamp(20px, 3vw, 48px); overflow: hidden; box-sizing: border-box; }
 
-        /* --- File Explorer Specifics --- */
         #resizer { width: 6px; cursor: col-resize; background: transparent; position: absolute; right: -3px; top: 0; bottom: 0; z-index: 10; transition: 0.2s; }
         #resizer:hover { background: rgba(0, 122, 255, 0.3); }
         
-        /* Custom Search Box */
         .search-box { display: flex; align-items: center; background: var(--input-bg); border: 1px solid var(--border); border-radius: 20px; padding: 6px 12px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
         .search-box:focus-within { border-color: var(--accent); background: #141414; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 0 0 0 2px rgba(0, 122, 255, 0.1); }
         .search-box input { border: none !important; background: transparent; width: 100%; color: white; outline: none; padding-left: 8px; font-size: 13px; font-weight: 400; box-shadow: none !important; }
 
-        /* Dropdown Filter Menu */
         .dropdown-menu { position: absolute; top: 38px; right: 0; background: linear-gradient(145deg, #1e1e1e, #181818); border: 1px solid #333; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); display: none; flex-direction: column; z-index: 100; overflow: hidden; width: 170px; padding: 4px; }
         .dropdown-menu button { background: transparent; border: none; color: var(--text); padding: 10px 15px; text-align: left; cursor: pointer; font-size: 13px; font-weight: 500; transition: 0.2s; border-radius: 8px; margin-bottom: 2px; }
         .dropdown-menu button:hover { background: rgba(255,255,255,0.05); color: white; }
@@ -84,7 +80,6 @@
         .folder-contents { overflow: hidden; }
         .folder-item.collapsed .folder-contents { display: none; }
         
-        /* Sleek File Items Style */
         .file-item { padding: 8px 12px; display: flex; align-items: flex-start; gap: 10px; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 8px; margin: 2px 4px; border: 1px solid transparent; }
         .file-item:hover { background: rgba(255,255,255,0.03); border-color: #2a2a2a; transform: translateX(2px); }
         .file-item .btn-icon { margin-top: -3px; opacity: 0; transition: opacity 0.2s; } 
@@ -93,22 +88,19 @@
         .file-item:hover .file-name { color: #fff; }
         .file-item input.rename-input { flex: 1; pointer-events: auto; }
         
-        /* Multi-Select & Renamed Backgrounds */
         .file-item.renamed { background: rgba(50, 215, 75, 0.05); }
         .file-item.renamed:hover { background: rgba(50, 215, 75, 0.1); border-color: rgba(50, 215, 75, 0.2); }
         .file-item.active { background: rgba(0, 122, 255, 0.1) !important; border-color: rgba(0, 122, 255, 0.3) !important; box-shadow: 0 4px 15px rgba(0, 122, 255, 0.05); transform: translateX(2px); }
         .file-item.active .file-name { color: #fff; font-weight: 500; }
         .file-item.active .btn-icon { opacity: 1; }
 
-        /* --- Sleek Player Card (Locked against shrinking) --- */
-        #custom-player { flex-shrink: 0; width: 100%; max-width: 680px; background: linear-gradient(145deg, #1a1a1a, #111); padding: 26px 34px; border-radius: 20px; margin-bottom: 22px; box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05); border: 1px solid #222; box-sizing: border-box; }
-        #current-title { text-align: center; margin-bottom: 18px; font-weight: 500; font-size: 16px; letter-spacing: 0.5px; word-break: break-word; line-height: 1.4; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); cursor: pointer; border-radius: 8px; padding: 4px 8px; transition: background 0.2s; }
+        #custom-player { flex-shrink: 0; width: min(100%, 700px); background: linear-gradient(145deg, #1a1a1a, #111); padding: clamp(18px, 2.5vh, 30px) clamp(24px, 3vw, 40px); border-radius: 20px; margin-bottom: clamp(14px, 2vh, 24px); box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05); border: 1px solid #222; box-sizing: border-box; }
+        #current-title { text-align: center; margin-bottom: clamp(12px, 1.8vh, 20px); font-weight: 500; font-size: 16px; letter-spacing: 0.5px; word-break: break-word; line-height: 1.4; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); cursor: pointer; border-radius: 8px; padding: 4px 8px; transition: background 0.2s; }
         #current-title:hover { background: rgba(255, 255, 255, 0.04); }
         .title-rename-input { width: 100%; max-width: 520px; text-align: center; font-size: 16px; font-weight: 500; padding: 4px 10px; border-radius: 8px; }
         
-        .player-controls { display: flex; align-items: center; justify-content: center; gap: 35px; margin-top: 18px; }
+        .player-controls { display: flex; align-items: center; justify-content: center; gap: 35px; margin-top: clamp(12px, 1.8vh, 20px); }
         
-        /* Prominent Play Button */
         #play-pause-btn { background: var(--accent); color: white; width: 52px; height: 52px; border-radius: 50%; padding: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0, 122, 255, 0.35); transition: 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); border: none; cursor: pointer; }
         #play-pause-btn:hover { transform: scale(1.08); box-shadow: 0 10px 25px rgba(0, 122, 255, 0.5); background: #006ce0; }
         #play-pause-btn .icon { width: 22px; height: 22px; margin-left: 2px; }
@@ -117,27 +109,24 @@
         .player-controls .btn-icon { color: #888; transition: 0.2s; }
         .player-controls .btn-icon:hover { color: #fff; transform: scale(1.1); background: transparent; }
 
-        /* Sleek Waveform */
-        #waveform-container { width: 100%; height: 64px; background: #080808; border-radius: 8px; position: relative; cursor: pointer; overflow: hidden; border: 1px solid #1a1a1a; box-shadow: inset 0 2px 10px rgba(0,0,0,0.6); }
+        #waveform-container { width: 100%; height: clamp(50px, 7vh, 70px); background: #080808; border-radius: 8px; position: relative; cursor: pointer; overflow: hidden; border: 1px solid #1a1a1a; box-shadow: inset 0 2px 10px rgba(0,0,0,0.6); }
         #waveform-canvas { width: 100%; height: 100%; display: block; }
         #waveform-progress { position: absolute; top: 0; left: 0; width: 0%; height: 100%; background: linear-gradient(90deg, rgba(0, 122, 255, 0.05) 0%, rgba(0, 122, 255, 0.25) 100%); pointer-events: none; border-right: 2px solid var(--accent); box-shadow: 2px 0 15px rgba(0, 122, 255, 0.5); transition: width 0.05s linear; }
         
         .time-info { display: flex; justify-content: space-between; font-size: 12px; margin-top: 8px; color: #666; font-variant-numeric: tabular-nums; font-weight: 500; }
 
-        /* --- Workspace Tags & Scrollable Container --- */
-        #tag-workspace-wrapper { flex: 1; min-height: 0; width: 100%; max-width: 680px; display: flex; flex-direction: column; gap: 14px; overflow: hidden; }
+        #tag-workspace-wrapper { flex: 1; min-height: 0; width: 100%; max-width: 100%; display: flex; flex-direction: column; align-items: center; gap: 14px; overflow: hidden; }
 
-        .tag-toolbar { flex-shrink: 0; display: flex; align-items: center; gap: 10px; width: 100%; flex-wrap: wrap; }
-        .tag-toolbar .search-box { flex: 1; min-width: 160px; }
+        .tag-toolbar { flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 100%; }
 
-        .layout-switcher { display: flex; background: var(--input-bg); border: 1px solid var(--border); border-radius: 20px; padding: 3px; gap: 2px; flex-wrap: wrap; }
-        .layout-btn { background: transparent; border: none; color: var(--icon-color); font-size: 12px; font-weight: 500; padding: 5px 11px; border-radius: 16px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .layout-switcher { display: flex; background: var(--input-bg); border: 1px solid var(--border); border-radius: 20px; padding: 3px; gap: 2px; }
+        .layout-btn { background: transparent; border: none; color: var(--icon-color); font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 16px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
         .layout-btn:hover { color: white; }
         .layout-btn.active { background: #222; color: white; border: 1px solid #333; }
 
-        #tag-buttons-workspace { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 4px 4px 16px 4px; box-sizing: border-box; }
+        #tag-buttons-workspace { flex: 1; min-height: 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; overflow: hidden; box-sizing: border-box; padding: 2px; }
 
-        .workspace-tag { background: #1a1a1a; border: 1px solid #2a2a2a; color: #a0a0a0; padding: 10px 18px; border-radius: 20px; font-weight: 500; font-size: 13px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; user-select: none; box-sizing: border-box; }
+        .workspace-tag { background: #1a1a1a; border: 1px solid #2a2a2a; color: #a0a0a0; padding: var(--pill-py) var(--pill-px); border-radius: 20px; font-weight: 500; font-size: var(--pill-fs); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; user-select: none; box-sizing: border-box; }
         .workspace-tag:hover { background: #222; color: white; border-color: #333; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
         
         .workspace-tag.active { background: rgba(0, 122, 255, 0.1); border-color: rgba(0, 122, 255, 0.4); color: #5ab0ff; box-shadow: inset 0 0 10px rgba(0,122,255,0.05); }
@@ -146,36 +135,11 @@
         .workspace-tag.filter-target { border-color: var(--accent); color: white; background: #222; box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.35); }
 
         .tag-label-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .tag-remove-cross { margin-left: 2px; font-weight: bold; font-size: 11px; opacity: 0.7; flex-shrink: 0; }
+        .tag-remove-cross { margin-left: 2px; font-weight: bold; font-size: 11px; opacity: 0.7; }
         .workspace-tag.active:hover .tag-remove-cross { color: #ff9e9e; opacity: 1; }
 
-        /* Layout 1: H-Grid (Left-to-Right Uniform Grid) */
-        .layout-hgrid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-flow: row; gap: 10px; width: 100%; }
-        .layout-hgrid .workspace-tag { border-radius: 10px; padding: 10px 14px; justify-content: space-between; }
+        .layout-cloud { display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: var(--pill-gap); width: 100%; }
 
-        /* Layout 2: V-Grid (Top-to-Bottom Column Flow Grid) */
-        .layout-vgrid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-flow: column; gap: 10px; width: 100%; }
-        .layout-vgrid .workspace-tag { border-radius: 10px; padding: 10px 14px; justify-content: space-between; }
-
-        /* Layout 3: Pills (Classic Wrapped Cloud) */
-        .layout-cloud { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
-
-        /* Layout 4: H-Deck (Horizontal 3-Row Ribbon) */
-        .layout-hdeck { display: grid; grid-template-rows: repeat(3, 40px); grid-auto-flow: column; grid-auto-columns: max-content; gap: 10px; width: 100%; overflow-x: auto; padding-bottom: 10px; }
-        .layout-hdeck .workspace-tag { height: 40px; border-radius: 10px; padding: 0 16px; }
-
-        /* Layout 5: Split Deck (Active Top Strip + Dense 5-Col Keycaps) */
-        .layout-split { display: flex; flex-direction: column; gap: 14px; width: 100%; }
-        .split-active-strip { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; background: #111111; border: 1px solid var(--border); border-radius: 12px; min-height: 22px; }
-        .split-active-strip .workspace-tag { padding: 6px 14px; font-size: 12px; }
-        .split-inactive-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; width: 100%; }
-        .split-inactive-grid .workspace-tag { border-radius: 8px; padding: 8px 10px; font-size: 12px; justify-content: space-between; }
-
-        /* Layout 6: Frequent (Usage-Sorted 4-Col Grid) */
-        .layout-freq { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; }
-        .layout-freq .workspace-tag { border-radius: 10px; padding: 10px 14px; justify-content: space-between; }
-
-        /* --- Inputs & Modern Buttons --- */
         input[type="text"] { background: var(--input-bg); border: 1px solid var(--border); color: white; padding: 8px 12px; border-radius: 8px; font-size: 13px; outline: none; transition: all 0.2s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
         input[type="text"]:focus { border-color: var(--accent); background: #141414; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1), 0 0 0 2px rgba(0, 122, 255, 0.1); }
         
@@ -192,7 +156,6 @@
         .btn-icon { background: transparent; border: none; color: var(--icon-color); cursor: pointer; padding: 6px; border-radius: 6px; transition: 0.2s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: none; }
         .btn-icon:hover { color: white; background: rgba(255,255,255,0.05); transform: scale(1.05); }
 
-        /* --- Sleek Custom Modal --- */
         #detection-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; display: flex; align-items: center; justify-content: center; }
         .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); }
         .modal-content { position: relative; background: linear-gradient(145deg, #1a1a1a, #111); border: 1px solid #333; border-radius: 20px; padding: 30px; width: 90%; max-width: 480px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05); }
@@ -260,7 +223,7 @@
             <div style="flex:1"></div>
             <button class="btn" onclick="toggleTagsSidebar()">
                 <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-                Tag
+                Tags
             </button>
         </div>
         
@@ -284,20 +247,8 @@
 
             <div id="tag-workspace-wrapper">
                 <div class="tag-toolbar">
-                    <div class="search-box">
-                        <svg class="icon icon-sm" style="color: var(--icon-color);" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        <input type="text" id="tag-quick-filter" placeholder="Search tags..." oninput="handleTagFilterInput()" onfocus="handleTagFilterFocus()" onblur="handleTagFilterBlur()">
-                        <button id="clear-tag-filter-btn" class="btn-icon" style="display: none; width: 24px; height: 24px; padding: 0;" onclick="clearTagFilter()">
-                            <svg class="icon" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                        </button>
-                    </div>
-
                     <div class="layout-switcher">
-                        <button class="layout-btn" id="layout-btn-hgrid" onclick="setTagLayout('hgrid')">H-Grid</button>
-                        <button class="layout-btn" id="layout-btn-vgrid" onclick="setTagLayout('vgrid')">V-Grid</button>
                         <button class="layout-btn" id="layout-btn-cloud" onclick="setTagLayout('cloud')">Pills</button>
-                        <button class="layout-btn" id="layout-btn-hdeck" onclick="setTagLayout('hdeck')">H-Deck</button>
-                        <button class="layout-btn" id="layout-btn-split" onclick="setTagLayout('split')">Split</button>
                         <button class="layout-btn" id="layout-btn-freq" onclick="setTagLayout('freq')">Frequent</button>
                     </div>
                 </div>
@@ -372,22 +323,32 @@
     }
 
     async function saveDirectoryHandle(handle) {
-        const db = await openDB();
-        return new Promise(resolve => {
-            const tx = db.transaction('workspace', 'readwrite');
-            tx.objectStore('workspace').put(handle, 'savedDir');
-            tx.oncomplete = () => resolve();
-        });
+        try {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction('workspace', 'readwrite');
+                const store = tx.objectStore('workspace');
+                store.put(handle, 'savedDir');
+                store.delete('savedFiles');
+                store.delete('savedDirHandles');
+                tx.oncomplete = () => resolve();
+                tx.onerror = (e) => reject(e.target.error);
+            });
+        } catch (e) {}
     }
 
     async function loadDirectoryHandle() {
-        const db = await openDB();
-        return new Promise(resolve => {
-            const tx = db.transaction('workspace', 'readonly');
-            const req = tx.objectStore('workspace').get('savedDir');
-            req.onsuccess = () => resolve(req.result);
-            req.onerror = () => resolve(null);
-        });
+        try {
+            const db = await openDB();
+            return new Promise(resolve => {
+                const tx = db.transaction('workspace', 'readonly');
+                const req = tx.objectStore('workspace').get('savedDir');
+                req.onsuccess = () => resolve(req.result || null);
+                req.onerror = () => resolve(null);
+            });
+        } catch (e) {
+            return null;
+        }
     }
 
     function saveCachedFilesMeta() {
@@ -408,24 +369,21 @@
             localStorage.removeItem('sfx_cached_files_meta');
             const db = await openDB();
             const tx = db.transaction('workspace', 'readwrite');
-            tx.objectStore('workspace').delete('savedDir');
+            const store = tx.objectStore('workspace');
+            store.delete('savedDir');
+            store.delete('savedFiles');
+            store.delete('savedDirHandles');
             tx.oncomplete = () => location.reload();
         }
     }
 
-    async function verifyPermission(fileHandle) {
-        const opts = { mode: 'readwrite' };
-        if ((await fileHandle.queryPermission(opts)) === 'granted') return true;
-        if ((await fileHandle.requestPermission(opts)) === 'granted') return true;
-        return false;
-    }
-
-    // --- App State ---
-    const VALID_LAYOUTS = ['hgrid', 'vgrid', 'cloud', 'hdeck', 'split', 'freq'];
+    const VALID_LAYOUTS = ['cloud', 'freq'];
     const DEFAULT_TAGS = ['Comedy', 'Tabla', 'Impact', 'Transition', 'Foley', 'Cinematic'];
     let tags = JSON.parse(localStorage.getItem('sfx_tags')) || DEFAULT_TAGS;
+    let tagClickCounts = JSON.parse(localStorage.getItem('sfx_tag_click_counts') || '{}');
     let storedLayout = localStorage.getItem('sfx_tag_layout');
-    let tagLayout = VALID_LAYOUTS.includes(storedLayout) ? storedLayout : 'hgrid';
+    let tagLayout = VALID_LAYOUTS.includes(storedLayout) ? storedLayout : 'cloud';
+    let tagFilterQuery = '';
     let highlightedTagIndex = -1;
     let visibleTagsState = [];
 
@@ -439,8 +397,9 @@
     let originalFileStates = JSON.parse(sessionStorage.getItem('sfx_original_states') || '{}');
     
     let dirHandle = null;
-    let needsHandleReconnect = false;
-    let reconnectPromise = null;
+    let liveHandlesReady = false;
+    let scanInFlightPromise = null;
+    let currentAudioObjectUrl = null;
     let dirHandles = {}; 
     let allFiles = []; 
     let files = []; 
@@ -458,67 +417,119 @@
     const playPauseBtn = document.getElementById('play-pause-btn');
     const progressBar = document.getElementById('waveform-progress');
 
-    // --- Seamless Handle Reconnection on Reload ---
-    async function ensureFolderConnected() {
+    async function ensureLiveHandles() {
+        if (liveHandlesReady && allFiles.length > 0 && allFiles[0].handle) {
+            return true;
+        }
         if (!dirHandle) return false;
-        if (!needsHandleReconnect) return true;
-        if (reconnectPromise) return reconnectPromise;
+        if (scanInFlightPromise) return scanInFlightPromise;
 
-        reconnectPromise = (async () => {
-            try {
-                const granted = await verifyPermission(dirHandle);
-                if (!granted) return false;
+        try {
+            let perm = await dirHandle.queryPermission({ mode: 'readwrite' });
+            if (perm !== 'granted') {
+                perm = await dirHandle.requestPermission({ mode: 'readwrite' });
+            }
+            if (perm !== 'granted') return false;
 
-                const prevSelectedPaths = new Set();
+            scanInFlightPromise = (async () => {
+                const selectedPaths = new Set();
                 selectedIds.forEach(id => {
                     const found = allFiles.find(x => x.id === id);
-                    if (found) prevSelectedPaths.add(getFullPath(found.path, found.name));
+                    if (found) selectedPaths.add(getFullPath(found.path, found.name));
                 });
-                const prevCurrentFile = files[currentIndex]
-                    ? { name: files[currentIndex].name, path: files[currentIndex].path }
-                    : JSON.parse(localStorage.getItem('sfx_last_selected_track') || 'null');
 
-                const existingIdsByPath = {};
-                allFiles.forEach(f => { existingIdsByPath[getFullPath(f.path, f.name)] = f.id; });
+                const currentTrackPath = (currentIndex >= 0 && files[currentIndex])
+                    ? getFullPath(files[currentIndex].path, files[currentIndex].name)
+                    : (lastSelectedTrack ? getFullPath(lastSelectedTrack.path, lastSelectedTrack.name) : null);
+
+                const idMap = {};
+                allFiles.forEach(f => { idMap[getFullPath(f.path, f.name)] = f.id; });
 
                 allFiles = [];
                 dirHandles = {};
-                await scanDirectory(dirHandle, '', existingIdsByPath);
+                await scanDirectory(dirHandle, '', idMap);
+                liveHandlesReady = true;
                 saveCachedFilesMeta();
-                needsHandleReconnect = false;
 
                 selectedIds.clear();
                 allFiles.forEach(f => {
-                    if (prevSelectedPaths.has(getFullPath(f.path, f.name))) {
+                    if (selectedPaths.has(getFullPath(f.path, f.name))) {
                         selectedIds.add(f.id);
                     }
                 });
 
                 applyFilter(filterState);
 
-                if (prevCurrentFile) {
-                    const idx = files.findIndex(f => f.name === prevCurrentFile.name && f.path === prevCurrentFile.path);
-                    if (idx > -1) {
-                        currentIndex = idx;
+                if (currentTrackPath) {
+                    const newIdx = files.findIndex(f => getFullPath(f.path, f.name) === currentTrackPath);
+                    if (newIdx > -1) {
+                        currentIndex = newIdx;
                         if (selectedIds.size === 0) {
-                            selectedIds.add(files[idx].id);
-                            lastClickedId = files[idx].id;
+                            selectedIds.add(files[newIdx].id);
+                            lastClickedId = files[newIdx].id;
                         }
                     }
                 }
+
                 renderList();
                 return true;
-            } catch (e) {
-                return false;
-            } finally {
-                reconnectPromise = null;
-            }
-        })();
+            })();
 
-        return reconnectPromise;
+            const res = await scanInFlightPromise;
+            scanInFlightPromise = null;
+            return res;
+        } catch (e) {
+            scanInFlightPromise = null;
+            return false;
+        }
     }
 
-    // --- 2D Spatial Arrow Key Navigation for All Layouts ---
+    async function performFileRename(fileObj, newPath, newName) {
+        const oldPath = fileObj.path;
+        const oldName = fileObj.name;
+        const sourceDir = dirHandles[oldPath] || dirHandle;
+        const targetDir = dirHandles[newPath] || sourceDir;
+
+        if (oldPath === newPath && fileObj.handle && typeof fileObj.handle.move === 'function') {
+            try {
+                await fileObj.handle.move(newName);
+                return true;
+            } catch (e1) {}
+        }
+
+        if (targetDir && fileObj.handle && typeof fileObj.handle.move === 'function') {
+            try {
+                await fileObj.handle.move(targetDir, newName);
+                return true;
+            } catch (e2) {}
+        }
+
+        if (!sourceDir || !targetDir) {
+            throw new Error('Directory handle missing for rename.');
+        }
+
+        const perm = await targetDir.queryPermission({ mode: 'readwrite' });
+        if (perm !== 'granted') {
+            await targetDir.requestPermission({ mode: 'readwrite' });
+        }
+
+        const srcHandle = fileObj.handle || await sourceDir.getFileHandle(oldName);
+        const srcFile = await srcHandle.getFile();
+        const arrayBuffer = await srcFile.arrayBuffer();
+
+        const destHandle = await targetDir.getFileHandle(newName, { create: true });
+        const writable = await destHandle.createWritable();
+        await writable.write(arrayBuffer);
+        await writable.close();
+
+        if (oldPath !== newPath || oldName !== newName) {
+            await sourceDir.removeEntry(oldName);
+        }
+
+        fileObj.handle = destHandle;
+        return true;
+    }
+
     function navigateTagHighlight(key) {
         const pillEls = Array.from(document.querySelectorAll('#tag-buttons-workspace .workspace-tag'));
         const total = pillEls.length;
@@ -530,44 +541,37 @@
             return;
         }
 
-        const curEl = pillEls[highlightedTagIndex];
-        if (!curEl) return;
-        const curRect = curEl.getBoundingClientRect();
-        const curCx = curRect.left + curRect.width / 2;
-        const curCy = curRect.top + curRect.height / 2;
-
-        let bestIdx = -1;
-        let bestScore = Infinity;
-
-        pillEls.forEach((el, idx) => {
-            if (idx === highlightedTagIndex) return;
-            const r = el.getBoundingClientRect();
-            const cx = r.left + r.width / 2;
-            const cy = r.top + r.height / 2;
-            const dx = cx - curCx;
-            const dy = cy - curCy;
-
-            if (key === 'ArrowRight' && dx > 8) {
-                const score = Math.abs(dy) * 3.5 + dx;
-                if (score < bestScore) { bestScore = score; bestIdx = idx; }
-            } else if (key === 'ArrowLeft' && dx < -8) {
-                const score = Math.abs(dy) * 3.5 + Math.abs(dx);
-                if (score < bestScore) { bestScore = score; bestIdx = idx; }
-            } else if (key === 'ArrowDown' && dy > 8) {
-                const score = dy + Math.abs(dx) * 2.5;
-                if (score < bestScore) { bestScore = score; bestIdx = idx; }
-            } else if (key === 'ArrowUp' && dy < -8) {
-                const score = Math.abs(dy) + Math.abs(dx) * 2.5;
-                if (score < bestScore) { bestScore = score; bestIdx = idx; }
-            }
-        });
-
-        if (bestIdx !== -1) {
-            highlightedTagIndex = bestIdx;
-        } else if (key === 'ArrowRight' || key === 'ArrowDown') {
+        if (key === 'ArrowRight') {
             highlightedTagIndex = (highlightedTagIndex + 1) % total;
-        } else if (key === 'ArrowLeft' || key === 'ArrowUp') {
+        } else if (key === 'ArrowLeft') {
             highlightedTagIndex = (highlightedTagIndex - 1 + total) % total;
+        } else if (key === 'ArrowDown' || key === 'ArrowUp') {
+            const curEl = pillEls[highlightedTagIndex];
+            if (curEl) {
+                const curRect = curEl.getBoundingClientRect();
+                const curCx = curRect.left + curRect.width / 2;
+                const curCy = curRect.top + curRect.height / 2;
+
+                let candidates = [];
+                pillEls.forEach((el, idx) => {
+                    if (idx === highlightedTagIndex) return;
+                    const r = el.getBoundingClientRect();
+                    const cy = r.top + r.height / 2;
+                    const cx = r.left + r.width / 2;
+                    if (key === 'ArrowDown' && cy > curCy + 10) {
+                        candidates.push({ idx, cx, cy, dy: cy - curCy });
+                    } else if (key === 'ArrowUp' && cy < curCy - 10) {
+                        candidates.push({ idx, cx, cy, dy: curCy - cy });
+                    }
+                });
+
+                if (candidates.length > 0) {
+                    const minDy = Math.min(...candidates.map(c => c.dy));
+                    const nearestRow = candidates.filter(c => Math.abs(c.dy - minDy) < 18);
+                    nearestRow.sort((a, b) => Math.abs(a.cx - curCx) - Math.abs(b.cx - curCx));
+                    highlightedTagIndex = nearestRow[0].idx;
+                }
+            }
         }
 
         updateTagHighlightDOM();
@@ -578,18 +582,18 @@
         pillEls.forEach((el, idx) => {
             if (idx === highlightedTagIndex) {
                 el.classList.add('filter-target');
-                el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
             } else {
                 el.classList.remove('filter-target');
             }
         });
     }
 
-    // --- Global Keyboard Shortcuts ---
     document.addEventListener('keydown', (e) => {
-        const tagFilterInput = document.getElementById('tag-quick-filter');
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-        if (e.target === tagFilterInput) {
+        const isTagSearchActive = (tagFilterQuery.length > 0 || highlightedTagIndex >= 0);
+
+        if (isTagSearchActive) {
             if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
                 e.preventDefault();
                 navigateTagHighlight(e.key);
@@ -598,19 +602,25 @@
                 e.preventDefault();
                 if (highlightedTagIndex >= 0 && highlightedTagIndex < visibleTagsState.length) {
                     const target = visibleTagsState[highlightedTagIndex];
+                    tagFilterQuery = '';
+                    highlightedTagIndex = -1;
                     toggleTagOnSelection(target.tag, target.isActive);
                 }
                 return;
+            } else if (e.key === 'Backspace') {
+                e.preventDefault();
+                tagFilterQuery = tagFilterQuery.slice(0, -1);
+                highlightedTagIndex = tagFilterQuery.length > 0 ? 0 : -1;
+                renderWorkspaceTags();
+                return;
             } else if (e.key === 'Escape') {
                 e.preventDefault();
-                clearTagFilter();
-                tagFilterInput.blur();
+                tagFilterQuery = '';
+                highlightedTagIndex = -1;
+                renderWorkspaceTags();
                 return;
             }
-            return;
         }
-
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
         if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
         else if (e.code === 'ArrowDown') { e.preventDefault(); nextTrack(); }
@@ -627,17 +637,23 @@
         else if (e.code === 'KeyZ' && (e.metaKey || e.ctrlKey) && !e.shiftKey) { e.preventDefault(); undo(); }
         else if ((e.code === 'KeyZ' && (e.metaKey || e.ctrlKey) && e.shiftKey) || (e.code === 'KeyY' && (e.metaKey || e.ctrlKey))) { e.preventDefault(); redo(); }
         else if (e.key.length === 1 && /^[a-zA-Z]$/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
-            if (tagFilterInput && document.getElementById('workspace-content').style.display !== 'none') {
-                tagFilterInput.focus();
+            if (document.getElementById('workspace-content').style.display !== 'none' && selectedIds.size > 0) {
+                e.preventDefault();
+                tagFilterQuery += e.key.toLowerCase();
+                highlightedTagIndex = 0;
+                renderWorkspaceTags();
             }
         }
     });
 
-    // Close Dropdown if clicked outside
     document.addEventListener('click', (e) => {
         if (!e.target.closest('#filter-btn') && !e.target.closest('#filter-dropdown')) {
             document.getElementById('filter-dropdown').style.display = 'none';
         }
+    });
+
+    window.addEventListener('resize', () => {
+        fitTagsToWorkspace();
     });
 
     function scrub(seconds) {
@@ -647,7 +663,6 @@
         audioEngine.currentTime = newTime;
     }
 
-    // --- Inline Rename on Player Title ---
     function startPlayerTitleRename() {
         if (currentIndex < 0 || !files[currentIndex]) return;
         const titleEl = document.getElementById('current-title');
@@ -668,7 +683,16 @@
                 finished = true;
                 const newVal = input.value.trim();
                 if (newVal && newVal !== item.name) {
-                    await executeBatchRename([{ index: currentIndex, newName: newVal }]);
+                    const targetPath = getFullPath(item.path, item.name);
+                    const ok = await ensureLiveHandles();
+                    if (!ok) {
+                        titleEl.innerText = item.name;
+                        return;
+                    }
+                    const freshIdx = files.findIndex(f => getFullPath(f.path, f.name) === targetPath);
+                    if (freshIdx > -1) {
+                        await executeBatchRename([{ index: freshIdx, newName: newVal }]);
+                    }
                 } else {
                     titleEl.innerText = item.name;
                 }
@@ -713,14 +737,13 @@
             });
 
             document.getElementById('current-title').innerText = fileObj.name;
-            if (fileObj.handle) {
+            if (liveHandlesReady && fileObj.handle) {
                 loadTrack(targetIndex);
             }
             renderWorkspaceTags();
         }
     }
 
-    // --- State Mapping Logic ---
     function updateOriginalStateMap(oldPath, oldName, newPath, newName, fileObj) {
         const oldFull = getFullPath(oldPath, oldName);
         const newFull = getFullPath(newPath, newName);
@@ -738,7 +761,6 @@
         fileObj.originalPath = orig.path;
     }
 
-    // --- Boot Sequence ---
     window.onload = async () => {
         updateLayoutButtonsUI();
         saveTags(); 
@@ -755,65 +777,41 @@
         const toggleFoldersBtn = document.getElementById('toggle-folders-btn');
         if(toggleFoldersBtn) toggleFoldersBtn.innerHTML = isFoldersExpanded ? SVGs.arrowUp : SVGs.arrowDown;
 
-        const savedHandle = await loadDirectoryHandle();
+        const savedDir = await loadDirectoryHandle();
         const initBtn = document.getElementById('init-btn');
         const closeBtn = document.getElementById('close-folder-btn');
         
-        if (savedHandle) {
-            dirHandle = savedHandle;
+        if (savedDir) {
+            dirHandle = savedDir;
             closeBtn.style.display = 'flex';
             initBtn.style.display = 'none';
             document.getElementById('workspace-content').style.display = 'flex';
 
-            // Immediately hydrate from cached metadata so UI & tags work on reload without delay
             const cachedMeta = JSON.parse(localStorage.getItem('sfx_cached_files_meta') || 'null');
             if (cachedMeta && Array.isArray(cachedMeta) && cachedMeta.length > 0) {
-                allFiles = cachedMeta.map(m => ({
-                    id: m.id || generateId(),
-                    handle: null,
-                    name: m.name,
-                    originalName: m.originalName || m.name,
-                    path: m.path || '',
-                    originalPath: m.originalPath ?? (m.path || '')
-                }));
-                needsHandleReconnect = true;
+                allFiles = cachedMeta.map(f => {
+                    const fullPath = getFullPath(f.path, f.name);
+                    const origData = originalFileStates[fullPath];
+                    return {
+                        id: f.id || generateId(),
+                        handle: null,
+                        name: f.name,
+                        originalName: origData ? origData.name : (f.originalName || f.name),
+                        path: f.path || '',
+                        originalPath: origData ? origData.path : (f.originalPath ?? (f.path || ''))
+                    };
+                });
                 applyFilter(filterState);
                 restoreLastTrack();
             }
 
-            // Check if permission is already granted or can be granted immediately
-            let permStatus = await savedHandle.queryPermission({ mode: 'readwrite' });
-            if (permStatus !== 'granted') {
-                try {
-                    permStatus = await savedHandle.requestPermission({ mode: 'readwrite' });
-                } catch (e) {}
-            }
-
-            if (permStatus === 'granted') {
-                const existingIdsByPath = {};
-                allFiles.forEach(f => { existingIdsByPath[getFullPath(f.path, f.name)] = f.id; });
-                allFiles = [];
-                searchResults = null;
-                dirHandles = {};
-                await scanDirectory(dirHandle, '', existingIdsByPath);
-                saveCachedFilesMeta();
-                needsHandleReconnect = false;
-                applyFilter(filterState);
-                restoreLastTrack();
-            } else {
-                needsHandleReconnect = true;
-                // Reconnect automatically on the very first click or keydown anywhere
-                const autoUnlock = async () => {
-                    if (!needsHandleReconnect) return;
-                    const ok = await ensureFolderConnected();
-                    if (ok) {
-                        window.removeEventListener('pointerdown', autoUnlock, true);
-                        window.removeEventListener('keydown', autoUnlock, true);
-                    }
-                };
-                window.addEventListener('pointerdown', autoUnlock, true);
-                window.addEventListener('keydown', autoUnlock, true);
-            }
+            try {
+                const permStatus = await savedDir.queryPermission({ mode: 'readwrite' });
+                if (permStatus === 'granted') {
+                    await ensureLiveHandles();
+                    restoreLastTrack();
+                }
+            } catch (e) {}
         } else {
             initBtn.style.display = 'flex';
             initBtn.onclick = async () => {
@@ -823,8 +821,8 @@
                     allFiles = []; searchResults = null; dirHandles = {};
                     initBtn.innerHTML = `Scanning...`; 
                     await scanDirectory(dirHandle);
+                    liveHandlesReady = true;
                     saveCachedFilesMeta();
-                    needsHandleReconnect = false;
                     initBtn.style.display = 'none'; closeBtn.style.display = 'flex';
                     document.getElementById('workspace-content').style.display = 'flex';
                     applyFilter(filterState); 
@@ -834,7 +832,6 @@
         }
     };
 
-    // --- File Scanning & Dir Caching ---
     async function scanDirectory(directoryHandle, currentPath = '', existingIdsByPath = {}) {
         if (currentPath === '') dirHandles[''] = directoryHandle;
 
@@ -861,7 +858,6 @@
         }
     }
 
-    // --- Modal Detection Logic ---
     function autoDetectTags() {
         if (allFiles.length === 0) { alert("Please open an audio folder first."); return; }
 
@@ -903,7 +899,6 @@
         closeDetectionModal();
     }
 
-    // --- Tag & Layout Logic ---
     function setTagLayout(mode) {
         tagLayout = mode;
         localStorage.setItem('sfx_tag_layout', mode);
@@ -916,33 +911,6 @@
             const btn = document.getElementById('layout-btn-' + m);
             if (btn) btn.classList.toggle('active', m === tagLayout);
         });
-    }
-
-    function handleTagFilterInput() {
-        highlightedTagIndex = 0;
-        renderWorkspaceTags();
-    }
-
-    function handleTagFilterFocus() {
-        if (highlightedTagIndex < 0) highlightedTagIndex = 0;
-        renderWorkspaceTags();
-    }
-
-    function handleTagFilterBlur() {
-        const input = document.getElementById('tag-quick-filter');
-        if (!input || !input.value.trim()) {
-            highlightedTagIndex = -1;
-            updateTagHighlightDOM();
-        }
-    }
-
-    function clearTagFilter() {
-        const input = document.getElementById('tag-quick-filter');
-        if (input) {
-            input.value = '';
-            highlightedTagIndex = -1;
-            renderWorkspaceTags();
-        }
     }
 
     function saveTags() {
@@ -1011,9 +979,9 @@
         const sidebar = document.getElementById('tag-sidebar');
         sidebar.classList.toggle('collapsed');
         localStorage.setItem('sfx_tag_sidebar_collapsed', sidebar.classList.contains('collapsed'));
+        setTimeout(fitTagsToWorkspace, 320);
     }
 
-    // --- Dropdown Filter Logic ---
     function toggleFilterMenu() {
         const menu = document.getElementById('filter-dropdown');
         menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
@@ -1046,14 +1014,16 @@
         renderList();
     }
 
-    // --- Resizer Memory Logic ---
     const fileSidebar = document.getElementById('file-sidebar');
     const resizer = document.getElementById('resizer');
     resizer.addEventListener('mousedown', () => { document.addEventListener('mousemove', resize); document.addEventListener('mouseup', stopResize); });
     
     function resize(e) { 
         let newWidth = e.pageX; 
-        if (newWidth > 250 && newWidth < 700) fileSidebar.style.width = newWidth + 'px'; 
+        if (newWidth > 250 && newWidth < 700) {
+            fileSidebar.style.width = newWidth + 'px';
+            fitTagsToWorkspace();
+        }
     }
     
     function stopResize() { 
@@ -1091,7 +1061,6 @@
         input.focus();
     }
 
-    // --- SMART Filename Extraction Engine ---
     function extractTagsFromName(filename, knownTags) {
         let activeTags = [];
         let baseName = filename.trim();
@@ -1121,8 +1090,14 @@
 
     async function toggleTagOnSelection(tag, isCurrentlyActive) {
         if (selectedIds.size === 0) return;
-        const ok = await ensureFolderConnected();
+
+        const ok = await ensureLiveHandles();
         if (!ok) return;
+
+        if (!isCurrentlyActive) {
+            tagClickCounts[tag] = (tagClickCounts[tag] || 0) + 1;
+            localStorage.setItem('sfx_tag_click_counts', JSON.stringify(tagClickCounts));
+        }
 
         const operations = [];
         selectedIds.forEach(id => {
@@ -1138,6 +1113,7 @@
             const newPrefix = fileTags.length > 0 ? fileTags.join(', ') + ', ' : '';
             operations.push({ index: f.index, newName: newPrefix + extraction.baseName });
         });
+
         await executeBatchRename(operations);
     }
 
@@ -1157,33 +1133,55 @@
             b.appendChild(cross);
         }
 
-        b.onclick = () => toggleTagOnSelection(tag, isActive);
+        b.onclick = () => {
+            tagFilterQuery = '';
+            highlightedTagIndex = -1;
+            toggleTagOnSelection(tag, isActive);
+        };
 
         return b;
     }
 
-    function getTagUsageCounts() {
-        const counts = {};
-        tags.forEach(t => counts[t] = 0);
+    function getTagFrequencyScores() {
+        const scores = {};
+        tags.forEach(t => {
+            scores[t] = (tagClickCounts[t] || 0);
+        });
         allFiles.forEach(f => {
             const { activeTags } = extractTagsFromName(f.name, tags);
             activeTags.forEach(t => {
-                if (counts[t] !== undefined) counts[t]++;
+                if (scores[t] !== undefined) scores[t] += 1;
             });
         });
-        return counts;
+        return scores;
     }
 
-    // --- Dynamic Workspace Tags ---
+    function fitTagsToWorkspace() {
+        const container = document.getElementById('tag-buttons-workspace');
+        if (!container || container.children.length === 0) return;
+
+        const presets = [
+            { py: 10, px: 18, fs: 13, gap: 12 },
+            { py: 8,  px: 15, fs: 13, gap: 10 },
+            { py: 7,  px: 13, fs: 12, gap: 8 },
+            { py: 5,  px: 11, fs: 11, gap: 6 },
+            { py: 4,  px: 9,  fs: 10, gap: 5 }
+        ];
+
+        for (let i = 0; i < presets.length; i++) {
+            const p = presets[i];
+            container.style.setProperty('--pill-py', p.py + 'px');
+            container.style.setProperty('--pill-px', p.px + 'px');
+            container.style.setProperty('--pill-fs', p.fs + 'px');
+            container.style.setProperty('--pill-gap', p.gap + 'px');
+            if (container.scrollHeight <= container.clientHeight || i === presets.length - 1) {
+                break;
+            }
+        }
+    }
+
     function renderWorkspaceTags() {
         const grid = document.getElementById('tag-buttons-workspace');
-        const filterInput = document.getElementById('tag-quick-filter');
-        const clearFilterBtn = document.getElementById('clear-tag-filter-btn');
-
-        const filterQuery = filterInput ? filterInput.value.trim().toLowerCase() : '';
-        const isFilterFocused = (document.activeElement === filterInput);
-        if (clearFilterBtn) clearFilterBtn.style.display = filterQuery ? 'flex' : 'none';
-
         grid.innerHTML = '';
         visibleTagsState = [];
 
@@ -1216,7 +1214,7 @@
         });
 
         const activeTags = Array.from(commonTags || []);
-        let visibleTags = tags.filter(t => t.toLowerCase().includes(filterQuery));
+        let visibleTags = tags.filter(t => t.toLowerCase().includes(tagFilterQuery));
 
         if (visibleTags.length === 0) {
             highlightedTagIndex = -1;
@@ -1224,130 +1222,41 @@
         }
 
         if (tagLayout === 'freq') {
-            const usage = getTagUsageCounts();
+            const scores = getTagFrequencyScores();
             visibleTags = [...visibleTags].sort((a, b) => {
-                if (usage[b] !== usage[a]) return usage[b] - usage[a];
+                if (scores[b] !== scores[a]) return scores[b] - scores[a];
+                if ((tagClickCounts[b] || 0) !== (tagClickCounts[a] || 0)) {
+                    return (tagClickCounts[b] || 0) - (tagClickCounts[a] || 0);
+                }
                 return a.localeCompare(b, undefined, { sensitivity: 'base' });
             });
         }
 
-        if ((isFilterFocused || filterQuery) && (highlightedTagIndex < 0 || highlightedTagIndex >= visibleTags.length)) {
+        if (tagFilterQuery && (highlightedTagIndex < 0 || highlightedTagIndex >= visibleTags.length)) {
             highlightedTagIndex = 0;
-        } else if (!isFilterFocused && !filterQuery) {
+        } else if (!tagFilterQuery && highlightedTagIndex >= visibleTags.length) {
             highlightedTagIndex = -1;
         }
 
-        if (tagLayout === 'hgrid') {
-            const hgrid = document.createElement('div');
-            hgrid.className = 'layout-hgrid';
-            visibleTags.forEach((tag, idx) => {
-                const isAct = activeTags.includes(tag);
-                visibleTagsState.push({ tag, isActive: isAct });
-                hgrid.appendChild(createTagPillElement(tag, {
-                    isActive: isAct,
-                    isFilterTarget: idx === highlightedTagIndex
-                }));
-            });
-            grid.appendChild(hgrid);
-
-        } else if (tagLayout === 'vgrid') {
-            const vgrid = document.createElement('div');
-            vgrid.className = 'layout-vgrid';
-            const rows = Math.max(1, Math.ceil(visibleTags.length / 4));
-            vgrid.style.gridTemplateRows = `repeat(${rows}, auto)`;
-
-            visibleTags.forEach((tag, idx) => {
-                const isAct = activeTags.includes(tag);
-                visibleTagsState.push({ tag, isActive: isAct });
-                vgrid.appendChild(createTagPillElement(tag, {
-                    isActive: isAct,
-                    isFilterTarget: idx === highlightedTagIndex
-                }));
-            });
-            grid.appendChild(vgrid);
-
-        } else if (tagLayout === 'hdeck') {
-            const hdeck = document.createElement('div');
-            hdeck.className = 'layout-hdeck';
-            visibleTags.forEach((tag, idx) => {
-                const isAct = activeTags.includes(tag);
-                visibleTagsState.push({ tag, isActive: isAct });
-                hdeck.appendChild(createTagPillElement(tag, {
-                    isActive: isAct,
-                    isFilterTarget: idx === highlightedTagIndex
-                }));
-            });
-            grid.appendChild(hdeck);
-
-        } else if (tagLayout === 'split') {
-            const splitWrap = document.createElement('div');
-            splitWrap.className = 'layout-split';
-
-            const activeList = visibleTags.filter(t => activeTags.includes(t));
-            const inactiveList = visibleTags.filter(t => !activeTags.includes(t));
-            const combinedOrder = [...activeList, ...inactiveList];
-
-            if (activeList.length > 0) {
-                const activeStrip = document.createElement('div');
-                activeStrip.className = 'split-active-strip';
-                activeList.forEach(tag => {
-                    const idx = visibleTagsState.length;
-                    visibleTagsState.push({ tag, isActive: true });
-                    activeStrip.appendChild(createTagPillElement(tag, {
-                        isActive: true,
-                        isFilterTarget: idx === highlightedTagIndex
-                    }));
-                });
-                splitWrap.appendChild(activeStrip);
-            }
-
-            const inactiveGrid = document.createElement('div');
-            inactiveGrid.className = 'split-inactive-grid';
-            inactiveList.forEach(tag => {
-                const idx = visibleTagsState.length;
-                visibleTagsState.push({ tag, isActive: false });
-                inactiveGrid.appendChild(createTagPillElement(tag, {
-                    isActive: false,
-                    isFilterTarget: idx === highlightedTagIndex
-                }));
-            });
-            splitWrap.appendChild(inactiveGrid);
-            grid.appendChild(splitWrap);
-
-        } else if (tagLayout === 'freq') {
-            const freqGrid = document.createElement('div');
-            freqGrid.className = 'layout-freq';
-            visibleTags.forEach((tag, idx) => {
-                const isAct = activeTags.includes(tag);
-                visibleTagsState.push({ tag, isActive: isAct });
-                freqGrid.appendChild(createTagPillElement(tag, {
-                    isActive: isAct,
-                    isFilterTarget: idx === highlightedTagIndex
-                }));
-            });
-            grid.appendChild(freqGrid);
-
-        } else {
-            const cloud = document.createElement('div');
-            cloud.className = 'layout-cloud';
-            visibleTags.forEach((tag, idx) => {
-                const isAct = activeTags.includes(tag);
-                visibleTagsState.push({ tag, isActive: isAct });
-                cloud.appendChild(createTagPillElement(tag, {
-                    isActive: isAct,
-                    isFilterTarget: idx === highlightedTagIndex
-                }));
-            });
-            grid.appendChild(cloud);
-        }
+        const cloud = document.createElement('div');
+        cloud.className = 'layout-cloud';
+        visibleTags.forEach((tag, idx) => {
+            const isAct = activeTags.includes(tag);
+            visibleTagsState.push({ tag, isActive: isAct });
+            cloud.appendChild(createTagPillElement(tag, {
+                isActive: isAct,
+                isFilterTarget: idx === highlightedTagIndex
+            }));
+        });
+        grid.appendChild(cloud);
+        fitTagsToWorkspace();
     }
 
-    // --- Drag and Drop File Moving Logic ---
     async function handleDrop(e, targetPath) {
         try {
             const data = e.dataTransfer.getData('application/json');
             if (!data) return;
-            const ok = await ensureFolderConnected();
+            const ok = await ensureLiveHandles();
             if (!ok) return;
             
             const draggedIds = JSON.parse(data);
@@ -1371,7 +1280,7 @@
             if (operations.length > 0) {
                 const batchHistory = [];
                 for(let op of operations) {
-                    await op.file.handle.move(op.targetDirHandle, op.name);
+                    await performFileRename(op.file, op.newPath, op.name);
                     updateOriginalStateMap(op.oldPath, op.name, op.newPath, op.name, op.file);
                     op.file.path = op.newPath;
                     batchHistory.push(op);
@@ -1381,13 +1290,9 @@
                 redoStack = [];
                 renderList();
             }
-        } catch (err) {
-            console.error("Drop error", err);
-            alert("Failed to move files. Ensure files are not open elsewhere.");
-        }
+        } catch (err) {}
     }
 
-    // --- Rendering Logic ---
     function renderList(isSearchEvent = false) {
         const searchInput = document.getElementById('file-search-input');
         const searchQuery = searchInput ? searchInput.value.toLowerCase() : '';
@@ -1505,8 +1410,16 @@
                 const input = document.createElement('input');
                 input.type = 'text'; input.className = 'rename-input'; input.value = item.name;
                 
-                input.onkeydown = (ev) => {
-                    if (ev.key === 'Enter') executeBatchRename([{ index: item.index, newName: input.value }]);
+                input.onkeydown = async (ev) => {
+                    if (ev.key === 'Enter') {
+                        const targetPath = getFullPath(item.path, item.name);
+                        const ok = await ensureLiveHandles();
+                        if (!ok) return;
+                        const freshIdx = files.findIndex(f => getFullPath(f.path, f.name) === targetPath);
+                        if (freshIdx > -1) {
+                            await executeBatchRename([{ index: freshIdx, newName: input.value }]);
+                        }
+                    }
                     else if (ev.key === 'Escape') renderList();
                 };
                 
@@ -1620,9 +1533,8 @@
         renderWorkspaceTags(); 
     }
 
-    // --- Audio Control & Waveform Display ---
     let audioCtx;
-    async function drawWaveform(fileData) {
+    async function drawWaveformFromBuffer(arrayBuffer) {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
         const canvas = document.getElementById('waveform-canvas');
@@ -1637,8 +1549,7 @@
         ctx.clearRect(0, 0, rect.width, rect.height);
         
         try {
-            const arrayBuffer = await fileData.arrayBuffer();
-            const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+            const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer.slice(0));
             const rawData = audioBuffer.getChannelData(0);
             
             const samples = rect.width;
@@ -1677,23 +1588,34 @@
 
         currentIndex = index;
         let f = files[currentIndex];
+        const targetPath = getFullPath(f.path, f.name);
         
         localStorage.setItem('sfx_last_selected_track', JSON.stringify({ name: f.name, path: f.path }));
         document.getElementById('current-title').innerText = f.name;
 
-        if (!f.handle) {
-            const ok = await ensureFolderConnected();
-            if (!ok) return;
-            f = files[currentIndex];
-            if (!f || !f.handle) return;
-        }
+        const ok = await ensureLiveHandles();
+        if (!ok) return;
+
+        const freshIdx = files.findIndex(x => getFullPath(x.path, x.name) === targetPath);
+        if (freshIdx > -1) currentIndex = freshIdx;
+        f = files[currentIndex];
+        if (!f || !f.handle) return;
         
-        const fileData = await f.handle.getFile();
-        audioEngine.src = URL.createObjectURL(fileData);
-        drawWaveform(fileData);
-        
-        if (wasPlaying) { audioEngine.play(); playPauseBtn.innerHTML = SVGs.pause; } 
-        else { audioEngine.pause(); playPauseBtn.innerHTML = SVGs.play; }
+        try {
+            const fileData = await f.handle.getFile();
+            const arrayBuffer = await fileData.arrayBuffer();
+            const memoryBlob = new Blob([arrayBuffer], { type: fileData.type || 'audio/mpeg' });
+
+            if (currentAudioObjectUrl) {
+                URL.revokeObjectURL(currentAudioObjectUrl);
+            }
+            currentAudioObjectUrl = URL.createObjectURL(memoryBlob);
+            audioEngine.src = currentAudioObjectUrl;
+            drawWaveformFromBuffer(arrayBuffer);
+            
+            if (wasPlaying) { audioEngine.play(); playPauseBtn.innerHTML = SVGs.pause; } 
+            else { audioEngine.pause(); playPauseBtn.innerHTML = SVGs.play; }
+        } catch (e) {}
 
         progressBar.style.width = '0%'; document.getElementById('time-current').innerText = '0:00';
         
@@ -1718,6 +1640,8 @@
     }
 
     async function togglePlay() {
+        const ok = await ensureLiveHandles();
+        if (!ok) return;
         if (!audioEngine.src && currentIndex >= 0) {
             await loadTrack(currentIndex);
         }
@@ -1771,21 +1695,20 @@
         audioEngine.currentTime = ((e.clientX - rect.left) / rect.width) * audioEngine.duration;
     };
 
-    // --- Renaming Execution (BATCH SUPPORT) ---
     async function executeBatchRename(operations) {
-        const ok = await ensureFolderConnected();
+        const ok = await ensureLiveHandles();
         if (!ok) return;
 
         const batchHistory = [];
         
         for (const op of operations) {
             const f = files[op.index];
-            if (!f || !f.handle) continue;
+            if (!f) continue;
             const oldName = f.name;
             if (op.newName === oldName || !op.newName.trim()) continue;
             
             try {
-                await f.handle.move(op.newName);
+                await performFileRename(f, f.path, op.newName);
                 updateOriginalStateMap(f.path, oldName, f.path, op.newName, f);
                 f.name = op.newName;
                 batchHistory.push({ type: 'rename', file: f, oldName, newName: op.newName });
@@ -1794,7 +1717,7 @@
                     document.getElementById('current-title').innerText = op.newName;
                     localStorage.setItem('sfx_last_selected_track', JSON.stringify({ name: f.name, path: f.path }));
                 }
-            } catch (e) { console.error("Error renaming", f.name, e); }
+            } catch (e) {}
         }
         
         if (batchHistory.length > 0) {
@@ -1807,25 +1730,26 @@
 
     async function undo() {
         if (!historyStack.length) return;
-        const ok = await ensureFolderConnected();
+        const ok = await ensureLiveHandles();
         if (!ok) return;
 
         const batch = historyStack.pop();
         for (const act of batch) {
-            if (act.type === 'move') {
-                const oldDirHandle = dirHandles[act.oldPath];
-                await act.file.handle.move(oldDirHandle, act.name);
-                updateOriginalStateMap(act.newPath, act.name, act.oldPath, act.name, act.file);
-                act.file.path = act.oldPath;
-            } else {
-                await act.file.handle.move(act.oldName);
-                updateOriginalStateMap(act.file.path, act.newName, act.file.path, act.oldName, act.file);
-                act.file.name = act.oldName;
-                if (files[currentIndex] === act.file) {
-                    document.getElementById('current-title').innerText = act.oldName;
-                    localStorage.setItem('sfx_last_selected_track', JSON.stringify({ name: act.file.name, path: act.file.path }));
+            try {
+                if (act.type === 'move') {
+                    await performFileRename(act.file, act.oldPath, act.name);
+                    updateOriginalStateMap(act.newPath, act.name, act.oldPath, act.name, act.file);
+                    act.file.path = act.oldPath;
+                } else {
+                    await performFileRename(act.file, act.file.path, act.oldName);
+                    updateOriginalStateMap(act.file.path, act.newName, act.file.path, act.oldName, act.file);
+                    act.file.name = act.oldName;
+                    if (files[currentIndex] === act.file) {
+                        document.getElementById('current-title').innerText = act.oldName;
+                        localStorage.setItem('sfx_last_selected_track', JSON.stringify({ name: act.file.name, path: act.file.path }));
+                    }
                 }
-            }
+            } catch (e) {}
         }
         saveCachedFilesMeta();
         redoStack.push(batch);
@@ -1834,25 +1758,26 @@
 
     async function redo() {
         if (!redoStack.length) return;
-        const ok = await ensureFolderConnected();
+        const ok = await ensureLiveHandles();
         if (!ok) return;
 
         const batch = redoStack.pop();
         for (const act of batch) {
-            if (act.type === 'move') {
-                const newDirHandle = dirHandles[act.newPath];
-                await act.file.handle.move(newDirHandle, act.name);
-                updateOriginalStateMap(act.oldPath, act.name, act.newPath, act.name, act.file);
-                act.file.path = act.newPath;
-            } else {
-                await act.file.handle.move(act.newName);
-                updateOriginalStateMap(act.file.path, act.oldName, act.file.path, act.newName, act.file);
-                act.file.name = act.newName;
-                if (files[currentIndex] === act.file) {
-                    document.getElementById('current-title').innerText = act.newName;
-                    localStorage.setItem('sfx_last_selected_track', JSON.stringify({ name: act.file.name, path: act.file.path }));
+            try {
+                if (act.type === 'move') {
+                    await performFileRename(act.file, act.newPath, act.name);
+                    updateOriginalStateMap(act.oldPath, act.name, act.newPath, act.name, act.file);
+                    act.file.path = act.newPath;
+                } else {
+                    await performFileRename(act.file, act.file.path, act.newName);
+                    updateOriginalStateMap(act.file.path, act.oldName, act.file.path, act.newName, act.file);
+                    act.file.name = act.newName;
+                    if (files[currentIndex] === act.file) {
+                        document.getElementById('current-title').innerText = act.newName;
+                        localStorage.setItem('sfx_last_selected_track', JSON.stringify({ name: act.file.name, path: act.file.path }));
+                    }
                 }
-            }
+            } catch (e) {}
         }
         saveCachedFilesMeta();
         historyStack.push(batch);
